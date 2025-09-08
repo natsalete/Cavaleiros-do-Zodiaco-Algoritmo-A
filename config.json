@@ -1,0 +1,101 @@
+{
+  "cavaleiros": [
+    {
+      "nome": "Seiya",
+      "poder_cosmico": 1.5,
+      "energia": 5
+    },
+    {
+      "nome": "Shiryu", 
+      "poder_cosmico": 1.4,
+      "energia": 5
+    },
+    {
+      "nome": "Hyoga",
+      "poder_cosmico": 1.3,
+      "energia": 5
+    },
+    {
+      "nome": "Shun",
+      "poder_cosmico": 1.2,
+      "energia": 5
+    },
+    {
+      "nome": "Ikki",
+      "poder_cosmico": 1.1,
+      "energia": 5
+    }
+  ],
+  "casas_zodiaco": [
+    {
+      "nome": "Áries",
+      "dificuldade": 50,
+      "posicao": {"x": 5, "y": 5}
+    },
+    {
+      "nome": "Touro",
+      "dificuldade": 55,
+      "posicao": {"x": 10, "y": 8}
+    },
+    {
+      "nome": "Gêmeos",
+      "dificuldade": 60,
+      "posicao": {"x": 15, "y": 12}
+    },
+    {
+      "nome": "Câncer",
+      "dificuldade": 70,
+      "posicao": {"x": 20, "y": 16}
+    },
+    {
+      "nome": "Leão",
+      "dificuldade": 75,
+      "posicao": {"x": 25, "y": 20}
+    },
+    {
+      "nome": "Virgem",
+      "dificuldade": 80,
+      "posicao": {"x": 30, "y": 24}
+    },
+    {
+      "nome": "Libra",
+      "dificuldade": 85,
+      "posicao": {"x": 35, "y": 28}
+    },
+    {
+      "nome": "Escorpião",
+      "dificuldade": 90,
+      "posicao": {"x": 32, "y": 32}
+    },
+    {
+      "nome": "Sagitário",
+      "dificuldade": 95,
+      "posicao": {"x": 28, "y": 36}
+    },
+    {
+      "nome": "Capricórnio",
+      "dificuldade": 100,
+      "posicao": {"x": 24, "y": 38}
+    },
+    {
+      "nome": "Aquário",
+      "dificuldade": 110,
+      "posicao": {"x": 20, "y": 40}
+    },
+    {
+      "nome": "Peixes",
+      "dificuldade": 120,
+      "posicao": {"x": 15, "y": 41}
+    }
+  ],
+  "configuracoes": {
+    "tamanho_mapa": 42,
+    "entrada": {"x": 41, "y": 20},
+    "grande_mestre": {"x": 1, "y": 41},
+    "custos_terreno": {
+      "montanhoso": 200,
+      "plano": 1,
+      "rochoso": 5
+    }
+  }
+}

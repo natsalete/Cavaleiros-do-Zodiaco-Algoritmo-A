@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Cavaleiros do Zodíaco - Algoritmo A*</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .map-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(42, 1fr);
+            gap: 1px;
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 5px;
+            max-width: 100%;
+            overflow: auto;
+        }
+
+        .map-cell {
+            width: 12px;
+            height: 12px;
+            border-radius: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .map-cell:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Tipos de terreno */
+        .terreno-montanhoso { background-color: #444; }
+        .terreno-plano { background-color: #888; }
+        .terreno-rochoso { background-color: #666; }
+        .terreno-entrada { 
+            background-color: #ff4444; 
+            box-shadow: 0 0 6px #ff4444;
+        }
+        .terreno-grande-mestre { 
+            background-color: #44ff44; 
+            box-shadow: 0 0 6px #44ff44;
+        }
+        .terreno-casa { 
+            background-color: #ffaa00; 
+            box-shadow: 0 0 4px #ffaa00;
+        }
+        .caminho { 
+            background-color: #00aaff !important; 
+            box-shadow: 0 0 8px #00aaff;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .control-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-section {
+            margin-bottom: 25px;
+        }
+
+        .control-section h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffd700;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-value {
+            color: #fff;
+        }
+
+        .legend {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cavaleiros-list {
+            list-style: none;
+        }
+
+        .cavaleiros-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .casas-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .casa-item {
+            padding: 6px 0;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-cell {
+                width: 8px;
+                height: 8px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Cavaleiros do Zodíaco</h1>
+            <p>Algoritmo A* - Salvando Atena através das 12 Casas do Zodíaco</p>
+        </div>
+
+        <div class="main-content">
+            <div class="map-container">
+                <h3 style="margin-bottom: 15px; color: #ffd700;">🗺️ Mapa das 12 Casas do Zodíaco</h3>
+                <div id="mapGrid" class="map-grid"></div>
+            </div>
+
+            <div class="control-panel">
+                <div class="legend">
+                    <h4 style="margin-bottom: 10px; color: #ffd700;">📋 Legenda</h4>
+                    <div class="legend-item">
+                        <div class="legend-color terreno-montanhoso"></div>
+                        <span>Montanhoso (+200 min)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color terreno-plano"></div>
+                        <span>Plano (+1 min)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color terreno-rochoso"></div>
+                        <span>Rochoso (+5 min)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color terreno-entrada"></div>
+                        <span>Entrada do Santuário</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color terreno-grande-mestre"></div>
+                        <span>Casa do Grande Mestre</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color terreno-casa"></div>
+                        <span>Casas do Zodíaco</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color caminho"></div>
+                        <span>Caminho Encontrado</span>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>🚀 Controles</h3>
+                    <button id="carregarMapa" class="btn">📥 Carregar Mapa</button>
+                    <button id="executarBusca" class="btn" disabled>🔍 Executar Busca A*</button>
+                    <button id="limparCaminho" class="btn" disabled>🧹 Limpar Caminho</button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Executando algoritmo A*...</p>
+                </div>
+
+                <div class="control-section" id="cavaleirosSection" style="display: none;">
+                    <h3>⚔️ Cavaleiros de Bronze</h3>
+                    <ul id="cavaleirosList" class="cavaleiros-list"></ul>
+                </div>
+
+                <div class="control-section" id="casasSection" style="display: none;">
+                    <h3>🏛️ Casas do Zodíaco</h3>
+                    <div id="casasList" class="casas-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results" class="results">
+            <h3 style="margin-bottom: 15px; color: #ffd700;">📊 Resultados da Busca</h3>
+            <div id="statsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let gameData = null;
+        let currentPath = [];
+
+        const API_BASE = '/api';
+
+        // Elementos DOM
+        const mapGrid = document.getElementById('mapGrid');
+        const carregarMapaBtn = document.getElementById('carregarMapa');
+        const executarBuscaBtn = document.getElementById('executarBusca');
+        const limparCaminhoBtn = document.getElementById('limparCaminho');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const cavaleirosSection = document.getElementById('cavaleirosSection');
+        const casasSection = document.getElementById('casasSection');
+
+        // Event Listeners
+        carregarMapaBtn.addEventListener('click', carregarMapa);
+        executarBuscaBtn.addEventListener('click', executarBusca);
+        limparCaminhoBtn.addEventListener('click', limparCaminho);
+
+        async function carregarMapa() {
+            try {
+                carregarMapaBtn.disabled = true;
+                carregarMapaBtn.textContent = '⏳ Carregando...';
+
+                const response = await fetch(`${API_BASE}/game`);
+                gameData = await response.json();
+
+                renderizarMapa();
+                renderizarCavaleiros();
+                renderizarCasas();
+
+                executarBuscaBtn.disabled = false;
+                carregarMapaBtn.textContent = '✅ Mapa Carregado';
+
+                cavaleirosSection.style.display = 'block';
+                casasSection.style.display = 'block';
+
+            } catch (error) {
+                console.error('Erro ao carregar mapa:', error);
+                alert('Erro ao carregar mapa. Verifique se o servidor está rodando.');
+                carregarMapaBtn.disabled = false;
+                carregarMapaBtn.textContent = '📥 Carregar Mapa';
+            }
+        }
+
+        function renderizarMapa() {
+            mapGrid.innerHTML = '';
+            
+            for (let i = 0; i < gameData.size; i++) {
+                for (let j = 0; j < gameData.size; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'map-cell';
+                    cell.dataset.x = i;
+                    cell.dataset.y = j;
+                    
+                    const terreno = gameData.mapa[i][j];
+                    
+                    if (terreno === 0) {
+                        cell.classList.add('terreno-montanhoso');
+                    } else if (terreno === 1) {
+                        cell.classList.add('terreno-plano');
+                    } else if (terreno === 2) {
+                        cell.classList.add('terreno-rochoso');
+                    } else if (terreno === 3) {
+                        cell.classList.add('terreno-entrada');
+                    } else if (terreno === 4) {
+                        cell.classList.add('terreno-grande-mestre');
+                    } else if (terreno >= 5) {
+                        cell.classList.add('terreno-casa');
+                        const casaIndex = terreno - 5;
+                        if (casaIndex < gameData.casas.length) {
+                            cell.title = `Casa de ${gameData.casas[casaIndex].nome}`;
+                        }
+                    }
+                    
+                    mapGrid.appendChild(cell);
+                }
+            }
+        }
+
+        function renderizarCavaleiros() {
+            const lista = document.getElementById('cavaleirosList');
+            lista.innerHTML = '';
+            
+            gameData.cavaleiros.forEach(cavaleiro => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>${cavaleiro.nome}</strong><br>
+                    <small>Poder: ${cavaleiro.poder_cosmico} | Energia: ${cavaleiro.energia}/5</small>
+                `;
+                lista.appendChild(li);
+            });
+        }
+
+        function renderizarCasas() {
+            const lista = document.getElementById('casasList');
+            lista.innerHTML = '';
+            
+            gameData.casas.forEach((casa, index) => {
+                const div = document.createElement('div');
+                div.className = 'casa-item';
+                div.innerHTML = `
+                    <span>${casa.nome}</span>
+                    <span>Diff: ${casa.dificuldade}</span>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        async function executarBusca() {
+            try {
+                executarBuscaBtn.disabled = true;
+                limparCaminhoBtn.disabled = true;
+                loading.style.display = 'block';
+                results.classList.remove('show');
+
+                const response = await fetch(`${API_BASE}/busca`);
+                const resultado = await response.json();
+
+                loading.style.display = 'none';
+
+                if (resultado.sucesso) {
+                    currentPath = resultado.caminho;
+                    renderizarCaminho();
+                    renderizarResultados(resultado);
+                    limparCaminhoBtn.disabled = false;
+                } else {
+                    alert('Não foi possível encontrar um caminho válido!');
+                }
+
+                executarBuscaBtn.disabled = false;
+
+            } catch (error) {
+                console.error('Erro ao executar busca:', error);
+                alert('Erro ao executar busca. Verifique se o servidor está rodando.');
+                loading.style.display = 'none';
+                executarBuscaBtn.disabled = false;
+            }
+        }
+
+        function renderizarCaminho() {
+            // Primeiro, remove classes de caminho existentes
+            document.querySelectorAll('.caminho').forEach(cell => {
+                cell.classList.remove('caminho');
+            });
+
+            // Adiciona classe de caminho para cada posição
+            currentPath.forEach((pos, index) => {
+                const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
+                if (cell) {
+                    setTimeout(() => {
+                        cell.classList.add('caminho');
+                    }, index * 50); // Animação sequencial
+                }
+            });
+        }
+
+        function renderizarResultados(resultado) {
+            const container = document.getElementById('statsContainer');
+            container.innerHTML = '';
+
+            const stats = [
+                { label: '🎯 Status', value: resultado.sucesso ? '✅ Sucesso' : '❌ Falha' },
+                { label: '📏 Tamanho do Caminho', value: `${resultado.estatisticas.tamanho_caminho} posições` },
+                { label: '⏱️ Custo Total', value: `${resultado.custo_total} minutos` },
+                { label: '🚀 Tempo de Execução', value: resultado.duracao },
+                { label: '💰 Custo Médio/Passo', value: `${resultado.estatisticas.custo_medio_por_passo.toFixed(2)} min` }
+            ];
+
+            stats.forEach(stat => {
+                const div = document.createElement('div');
+                div.className = 'stat-item';
+                div.innerHTML = `
+                    <span class="stat-label">${stat.label}</span>
+                    <span class="stat-value">${stat.value}</span>
+                `;
+                container.appendChild(div);
+            });
+
+            // Adicionar informações sobre casas visitadas
+            if (resultado.estatisticas.casas_visitadas) {
+                const casasDiv = document.createElement('div');
+                casasDiv.style.marginTop = '20px';
+                casasDiv.innerHTML = '<h4 style="color: #ffd700; margin-bottom: 10px;">🏛️ Casas Visitadas:</h4>';
+                
+                resultado.estatisticas.casas_visitadas.forEach((visitada, index) => {
+                    if (index < gameData.casas.length) {
+                        const casaDiv = document.createElement('div');
+                        casaDiv.className = 'stat-item';
+                        casaDiv.innerHTML = `
+                            <span>${gameData.casas[index].nome}</span>
+                            <span>${visitada ? '✅' : '❌'}</span>
+                        `;
+                        casasDiv.appendChild(casaDiv);
+                    }
+                });
+                
+                container.appendChild(casasDiv);
+            }
+
+            results.classList.add('show');
+        }
+
+        function limparCaminho() {
+            document.querySelectorAll('.caminho').forEach(cell => {
+                cell.classList.remove('caminho');
+            });
+            
+            results.classList.remove('show');
+            limparCaminhoBtn.disabled = true;
+            currentPath = [];
+        }
+
+        // Carregar mapa automaticamente ao iniciar
+        window.addEventListener('load', () => {
+            setTimeout(carregarMapa, 500);
+        });
+
+        // Adicionar tooltips para células do mapa
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.classList.contains('map-cell')) {
+                const x = e.target.dataset.x;
+                const y = e.target.dataset.y;
+                
+                if (gameData && gameData.mapa[x] && gameData.mapa[x][y] !== undefined) {
+                    const terreno = gameData.mapa[x][y];
+                    let tooltip = `Posição: (${x}, ${y}) - `;
+                    
+                    if (terreno === 0) tooltip += 'Montanhoso (+200 min)';
+                    else if (terreno === 1) tooltip += 'Plano (+1 min)';
+                    else if (terreno === 2) tooltip += 'Rochoso (+5 min)';
+                    else if (terreno === 3) tooltip += 'Entrada do Santuário';
+                    else if (terreno === 4) tooltip += 'Casa do Grande Mestre';
+                    else if (terreno >= 5) {
+                        const casaIndex = terreno - 5;
+                        if (casaIndex < gameData.casas.length) {
+                            tooltip += `Casa de ${gameData.casas[casaIndex].nome} (Diff: ${gameData.casas[casaIndex].dificuldade})`;
+                        }
+                    }
+                    
+                    e.target.title = tooltip;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
