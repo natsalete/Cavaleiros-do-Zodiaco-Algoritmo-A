@@ -1,3 +1,4 @@
+// api/busca.go
 package api
 
 import (
@@ -14,6 +15,8 @@ func BuscaHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	g := game.NovoJogo()
+	resultado := g.AStar()
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(g)
+	json.NewEncoder(w).Encode(resultado)
 }
