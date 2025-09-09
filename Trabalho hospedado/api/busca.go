@@ -7,7 +7,7 @@ import (
 	"github.com/natsalete/Cavaleiros-do-Zodiaco-Algoritmo-A/game"
 )
 
-func GameHandler(w http.ResponseWriter, r *http.Request) {
+func BuscaHandler(w http.ResponseWriter, r *http.Request) {
 	game.EnableCORS(w)
 	if r.Method == "OPTIONS" {
 		return
