@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"../game"
+	"github.com/natsalete/Cavaleiros-do-Zodiaco-Algoritmo-A/game"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
