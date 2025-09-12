@@ -378,12 +378,12 @@ func serveStatic(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	fmt.Println("🌟 Servidor Cavaleiros do Zodíaco iniciando...")
-	fmt.Println("🌐 Acesse: http://localhost:8080")
+	fmt.Println("🌐 Acesse: http://localhost:8081")
 
 	http.HandleFunc("/", serveStatic)
 	http.HandleFunc("/api/game", getGameState)
 	http.HandleFunc("/api/busca", executarBusca)
 
-	fmt.Println("🚀 Servidor rodando na porta 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("🚀 Servidor rodando na porta 8081")
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }

@@ -6,7 +6,7 @@
       "energia": 5
     },
     {
-      "nome": "Shiryu", 
+      "nome": "Shiryu",
       "poder_cosmico": 1.4,
       "energia": 5
     },
@@ -30,68 +30,68 @@
     {
       "nome": "Áries",
       "dificuldade": 50,
-      "posicao": {"x": 5, "y": 5}
+      "posicao": { "x": 5, "y": 31 }
     },
     {
       "nome": "Touro",
       "dificuldade": 55,
-      "posicao": {"x": 10, "y": 8}
+      "posicao": { "x": 5, "y": 14 }
     },
     {
       "nome": "Gêmeos",
       "dificuldade": 60,
-      "posicao": {"x": 15, "y": 12}
+      "posicao": { "x": 10, "y": 15 }
     },
     {
       "nome": "Câncer",
       "dificuldade": 70,
-      "posicao": {"x": 20, "y": 16}
+      "posicao": { "x": 10, "y": 28 }
     },
     {
       "nome": "Leão",
       "dificuldade": 75,
-      "posicao": {"x": 25, "y": 20}
+      "posicao": { "x": 14, "y": 38 }
     },
     {
       "nome": "Virgem",
       "dificuldade": 80,
-      "posicao": {"x": 30, "y": 24}
+      "posicao": { "x": 18, "y": 30 }
     },
     {
       "nome": "Libra",
       "dificuldade": 85,
-      "posicao": {"x": 35, "y": 28}
+      "posicao": { "x": 18, "y": 10 }
     },
     {
       "nome": "Escorpião",
       "dificuldade": 90,
-      "posicao": {"x": 32, "y": 32}
+      "posicao": { "x": 25, "y": 10 }
     },
     {
       "nome": "Sagitário",
       "dificuldade": 95,
-      "posicao": {"x": 28, "y": 36}
+      "posicao": { "x": 25, "y": 27 }
     },
     {
       "nome": "Capricórnio",
       "dificuldade": 100,
-      "posicao": {"x": 24, "y": 38}
+      "posicao": { "x": 32, "y": 34 }
     },
     {
       "nome": "Aquário",
       "dificuldade": 110,
-      "posicao": {"x": 20, "y": 40}
+      "posicao": { "x": 32, "y": 18 }
     },
     {
       "nome": "Peixes",
       "dificuldade": 120,
-      "posicao": {"x": 15, "y": 41}
+      "posicao": { "x": 38, "y": 22 }
     }
   ],
   "configuracoes": {
     "tamanho_mapa": 42,
-    "entrada": {"x": 41, "y": 20},
-    "grande_mestre": {"x": 1, "y": 41},
+    "entrada": { "x": 5, "y": 38 },
+    "grande_mestre": { "x": 38, "y": 38 },
     "custos_terreno": {
       "montanhoso": 200,
       "plano": 1,
